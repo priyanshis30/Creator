@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CreatorDNA — The Influence Genome Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0E10;
+    --panel:#12181B;
+    --panel-raised:#161D21;
+    --line:#232B2F;
+    --line-soft:#191F22;
+    --text-primary:#EAF1EF;
+    --text-secondary:#A4B5B2;
+    --text-dim:#5C6B69;
+    --mono:'IBM Plex Mono',monospace;
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --trust:#4DD9C4;
+    --purchase:#F2B544;
+    --knowledge:#8B7FE8;
+    --entertainment:#F2616B;
+    --trend:#C8E84D;
+    --community:#5AA9E6;
+    --persuasion:#E85AC0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background-color:var(--bg);
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size:48px 48px;
+    color:var(--text-primary);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;}
+  .container{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(10,14,16,0.82);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:20px;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-0.02em;white-space:nowrap;}
+  .nav-links{display:flex;gap:26px;font-family:var(--mono);font-size:13px;letter-spacing:0.04em;color:var(--text-secondary);}
+  .nav-links a{text-decoration:none;color:inherit;padding:6px 2px;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--text-primary);border-color:var(--trust);}
+  @media(max-width:760px){.nav-links{display:none;}}
+
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.02em;padding:11px 20px;border-radius:999px;border:1px solid var(--trust);background:transparent;color:var(--trust);cursor:pointer;transition:background .2s,color .2s,transform .15s;white-space:nowrap;}
+  .btn:hover{background:var(--trust);color:#06201C;}
+  .btn:active{transform:scale(0.97);}
+  .btn-solid{background:var(--trust);color:#06201C;}
+  .btn-solid:hover{background:#3FC2AE;}
+  .btn:disabled{opacity:0.6;cursor:default;}
+
+  /* EYEBROW / HEADERS */
+  .eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:14px;}
+  .eyebrow .tick{width:18px;height:2px;background:var(--trust);display:inline-block;flex-shrink:0;}
+  .section{padding:88px 0;border-bottom:1px solid var(--line-soft);}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  h2.section-title{font-family:var(--display);font-size:clamp(26px,4vw,38px);font-weight:600;letter-spacing:-0.01em;margin:0 0 14px;}
+  .section-desc{color:var(--text-secondary);font-size:15.5px;max-width:560px;}
+
+  /* HERO */
+  .hero{padding:108px 0 70px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+  .hero h1{font-family:var(--display);font-size:clamp(36px,5.6vw,60px);line-height:1.05;letter-spacing:-0.02em;margin:0 0 22px;font-weight:600;}
+  .hero h1 .accent{color:var(--trust);}
+  .hero p.lede{font-size:16.5px;color:var(--text-secondary);max-width:470px;margin-bottom:30px;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+
+  .demo-panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;}
+  .demo-panel .eyebrow{margin-bottom:18px;}
+  .demo-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .sample-card{background:var(--panel-raised);border:1px solid var(--line);border-radius:12px;padding:18px 16px;}
+  .sample-card .sample-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;}
+  .sample-card .sample-followers{font-family:var(--mono);font-size:13px;color:var(--text-secondary);margin-bottom:14px;}
+  .sample-card .sample-trust{font-family:var(--display);font-size:28px;font-weight:700;}
+  .verdict-row{text-align:center;margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:12.5px;color:var(--text-secondary);line-height:1.6;}
+  .verdict-row strong{color:var(--purchase);}
+
+  /* LEGEND */
+  .legend-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
+  @media(max-width:980px){.legend-strip{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:560px){.legend-strip{grid-template-columns:repeat(2,1fr);}}
+  .legend-item{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;}
+  .legend-item .swatch{width:10px;height:10px;border-radius:2px;margin-bottom:10px;}
+  .legend-item .gname{font-family:var(--display);font-size:13.5px;font-weight:600;margin-bottom:5px;}
+  .legend-item .gdesc{font-size:12px;color:var(--text-secondary);line-height:1.45;}
+
+  /* ROSTER / CARDS */
+  .roster-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;}
+  @media(max-width:900px){.roster-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.roster-grid{grid-template-columns:1fr;}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;text-align:left;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden;display:block;width:100%;color:inherit;}
+  .card:hover{border-color:var(--text-dim);}
+  .card.active{border-color:var(--card-accent);box-shadow:0 0 0 1px var(--card-accent) inset, 0 0 26px -10px var(--card-accent);}
+  .card-tag{position:absolute;top:0;left:0;right:0;height:4px;}
+  .card-top{display:flex;justify-content:space-between;align-items:baseline;margin:10px 0 10px;gap:8px;}
+  .card-top .handle{font-family:var(--mono);font-size:14px;font-weight:600;}
+  .card-top .niche{font-size:11px;color:var(--text-dim);text-align:right;}
+  .card-stats{display:flex;justify-content:space-between;margin-top:8px;}
+  .card-stats .stat-label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
+  .card-stats .stat-val{font-family:var(--display);font-size:21px;font-weight:700;}
+  .card-stats .dim{color:var(--text-secondary);}
+  .card-stats .right{text-align:right;}
+
+  .detail-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px;}
+  .detail-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;margin-bottom:22px;}
+  .detail-note{font-size:15px;color:var(--text-secondary);max-width:580px;margin-top:18px;}
+  .tag-chip{display:inline-flex;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:6px 11px;border-radius:999px;border:1px solid var(--line);color:var(--text-secondary);text-transform:uppercase;}
+
+  /* COMPARE */
+  .compare-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:start;}
+  @media(max-width:820px){.compare-grid{grid-template-columns:1fr;}}
+  .compare-col{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;}
+  .compare-meta{font-family:var(--mono);font-size:13px;color:var(--text-secondary);margin:14px 0 4px;}
+  .delta-col{display:flex;flex-direction:column;gap:10px;padding-top:64px;min-width:110px;}
+  @media(max-width:820px){.delta-col{padding-top:0;flex-direction:row;flex-wrap:wrap;justify-content:center;}}
+  .delta-row{display:flex;align-items:center;gap:8px;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--text-secondary);}
+  @media(max-width:820px){.delta-row{background:var(--panel-raised);padding:4px 10px;border-radius:6px;}}
+  .delta-row .d-pos{color:var(--trust);}
+  .delta-row .d-neg{color:var(--entertainment);}
+  .compare-verdict{margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:14.5px;color:var(--text-secondary);}
+  .compare-verdict strong{color:var(--text-primary);}
+
+  /* FORMS */
+  select{background:var(--panel-raised);border:1px solid var(--line);color:var(--text-primary);font-family:var(--mono);font-size:13px;padding:10px 14px;border-radius:8px;width:100%;}
+  select:focus-visible{outline:2px solid var(--trust);outline-offset:2px;}
+  .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+
+  /* SIMULATOR */
+  .sim-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:end;margin-bottom:8px;}
+  @media(max-width:700px){.sim-controls{grid-template-columns:1fr;}}
+  .scan-bar{height:2px;background:var(--line);position:relative;overflow:hidden;border-radius:2px;margin:26px 0;display:none;}
+  .scan-bar .scan-fill{position:absolute;top:0;left:-30%;width:30%;height:100%;background:linear-gradient(90deg,transparent,var(--trust),transparent);animation:scan 0.9s linear;}
+  @keyframes scan{from{left:-30%;}to{left:100%;}}
+  .metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;transition:opacity .35s ease;}
+  @media(max-width:800px){.metrics-grid{grid-template-columns:repeat(2,1fr);}}
+  .metric-tile{background:var(--panel-raised);border:1px solid var(--line);border-radius:12px;padding:20px;}
+  .metric-tile .m-label{font-family:var(--mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+  .metric-tile .m-val{font-family:var(--display);font-size:28px;font-weight:700;}
+  .metric-tile .m-desc{font-size:12px;color:var(--text-secondary);margin-top:8px;line-height:1.4;}
+  .sim-verdict{font-size:14.5px;color:var(--text-secondary);margin-top:22px;padding-top:20px;border-top:1px solid var(--line);}
+  .sim-foot{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-top:18px;}
+  .sim-wrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;}
+
+  /* AUDIENCE */
+  .audience-wrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px;}
+  .audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:30px;}
+  @media(max-width:800px){.audience-grid{grid-template-columns:1fr;}}
+  .stack-bar{display:flex;height:34px;border-radius:6px;overflow:hidden;margin-bottom:10px;}
+  .stack-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:#06201C;font-weight:600;min-width:8%;}
+  .bar-legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--text-secondary);margin-bottom:28px;}
+  .bar-legend .dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:6px;}
+  .meter{margin-bottom:22px;}
+  .meter-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--text-secondary);margin-bottom:8px;}
+  .meter-track{height:8px;background:var(--line);border-radius:6px;overflow:hidden;}
+  .meter-fill{height:100%;border-radius:6px;transition:width .4s ease;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .audience-sub{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;}
+
+  footer{padding:56px 0 48px;text-align:center;}
+  .foot-tag{font-family:var(--display);font-size:18px;color:var(--text-secondary);}
+  .foot-note{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-top:12px;}
+
+  :focus-visible{outline:2px solid var(--trust);outline-offset:3px;border-radius:4px;}
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="2" y="10" width="3" height="10" rx="1" fill="#4DD9C4"/>
+        <rect x="7" y="4" width="3" height="16" rx="1" fill="#F2B544"/>
+        <rect x="12" y="8" width="3" height="12" rx="1" fill="#8B7FE8"/>
+        <rect x="17" y="2" width="3" height="18" rx="1" fill="#E85AC0"/>
+      </svg>
+      CreatorDNA
+    </div>
+    <div class="nav-links">
+      <a href="#sequencer">Sequencer</a>
+      <a href="#compare">Compare</a>
+      <a href="#simulator">Simulator</a>
+      <a href="#audience">Audience DNA</a>
+    </div>
+    <a href="#sequencer" class="btn">Sequence a creator</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow"><span class="tick"></span>The Influence Genome Project</div>
+      <h1>Don't measure reach.<br>Measure <span class="accent">influence.</span></h1>
+      <p class="lede">Every creator carries a genome of seven traits that predict whether their audience just watches — or actually acts. CreatorDNA sequences it before a brand spends a dollar.</p>
+      <div class="hero-ctas">
+        <a href="#sequencer" class="btn btn-solid">Sequence a creator</a>
+        <a href="#simulator" class="btn">Run a campaign simulation</a>
+      </div>
+    </div>
+    <div class="demo-panel">
+      <div class="eyebrow"><span class="tick" style="background:var(--purchase);"></span>Live comparison</div>
+      <div class="demo-pair">
+        <div class="sample-card" id="heroA"></div>
+        <div class="sample-card" id="heroB"></div>
+      </div>
+      <div class="verdict-row" id="heroVerdict"></div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="genome-map">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><span class="tick"></span>Genome map · 7 loci</div>
+      <h2 class="section-title">The seven traits brands actually need</h2>
+      <p class="section-desc">Followers and views measure attention. These seven genes measure what attention turns into — and they're the basis for everything below.</p>
+    </div>
+    <div class="legend-strip" id="legendStrip"></div>
+  </div>
+</section>
+
+<section class="section" id="sequencer">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><span class="tick"></span>Step 1 · Sequencer</div>
+      <h2 class="section-title">Pick a creator, read their genome</h2>
+      <p class="section-desc">Six creators, six very different profiles. Click one to sequence it in full — the trace below the follower count is what actually predicts campaign performance.</p>
+    </div>
+    <div class="roster-grid" id="rosterGrid"></div>
+    <div class="detail-panel" id="detailPanel"></div>
+  </div>
+</section>
+
+<section class="section" id="compare">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><span class="tick"></span>Step 2 · Compare</div>
+      <h2 class="section-title">Put two creators side by side</h2>
+      <p class="section-desc">Reach is rarely the deciding factor. Compare any two profiles gene-by-gene and let the delta column do the arguing.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col">
+        <div class="field"><label for="compareA">Creator A</label>
+          <select id="compareA" onchange="updateCompare()">
+            <option value="prism">@prismloop</option>
+            <option value="jfield">@field.julia</option>
+            <option value="nbench">@northbenchco</option>
+            <option value="drnoor">@drnoor.skin</option>
+            <option value="rove">@rove.eats</option>
+            <option value="lunaire">@lunaire.studio</option>
+          </select>
+        </div>
+        <div class="compare-meta" id="compareMetaA"></div>
+        <div id="compareTraceA"></div>
+      </div>
+      <div class="delta-col" id="deltaCol"></div>
+      <div class="compare-col">
+        <div class="field"><label for="compareB">Creator B</label>
+          <select id="compareB" onchange="updateCompare()">
+            <option value="prism">@prismloop</option>
+            <option value="jfield" selected>@field.julia</option>
+            <option value="nbench">@northbenchco</option>
+            <option value="drnoor">@drnoor.skin</option>
+            <option value="rove">@rove.eats</option>
+            <option value="lunaire">@lunaire.studio</option>
+          </select>
+        </div>
+        <div class="compare-meta" id="compareMetaB"></div>
+        <div id="compareTraceB"></div>
+      </div>
+    </div>
+    <div class="compare-verdict" id="compareVerdict"></div>
+  </div>
+</section>
+
+<section class="section" id="simulator">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><span class="tick"></span>Step 3 · Campaign simulator</div>
+      <h2 class="section-title">A wind tunnel for influencer spend</h2>
+      <p class="section-desc">Pick a creator and a brand. CreatorDNA predicts how that pairing performs before any contract is signed.</p>
+    </div>
+    <div class="sim-wrap">
+      <div class="sim-controls">
+        <div class="field"><label for="simCreator">Creator</label>
+          <select id="simCreator">
+            <option value="prism">@prismloop</option>
+            <option value="jfield" selected>@field.julia</option>
+            <option value="nbench">@northbenchco</option>
+            <option value="drnoor">@drnoor.skin</option>
+            <option value="rove">@rove.eats</option>
+            <option value="lunaire">@lunaire.studio</option>
+          </select>
+        </div>
+        <div class="field"><label for="simBrand">Brand</label>
+          <select id="simBrand">
+            <option value="verve" selected>Verve Skincare</option>
+            <option value="northfield">Northfield Coffee</option>
+            <option value="lumen">Lumen Sportswear</option>
+            <option value="crestline">Crestline Finance App</option>
+            <option value="bloomhaus">Bloomhaus Furniture</option>
+          </select>
+        </div>
+        <button class="btn btn-solid" id="simRunBtn" onclick="runSimulation()">Run simulation</button>
+      </div>
+      <div class="scan-bar" id="simScan"><div class="scan-fill"></div></div>
+      <div class="metrics-grid" id="simResults" style="opacity:0"></div>
+      <div class="sim-foot">Projections are computed from genome alignment, not live ad data — illustrative for this prototype.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="audience" style="border-bottom:none;">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><span class="tick"></span>Step 4 · Audience DNA</div>
+      <h2 class="section-title">The genome isn't just the creator's</h2>
+      <p class="section-desc">CreatorDNA sequences the audience too, so brands match creators to the people most likely to buy.</p>
+    </div>
+    <div class="audience-wrap">
+      <div class="field" style="max-width:320px;margin-bottom:8px;">
+        <label for="audienceSelect">Creator</label>
+        <select id="audienceSelect" onchange="updateAudience()">
+          <option value="prism">@prismloop</option>
+          <option value="jfield" selected>@field.julia</option>
+          <option value="nbench">@northbenchco</option>
+          <option value="drnoor">@drnoor.skin</option>
+          <option value="rove">@rove.eats</option>
+          <option value="lunaire">@lunaire.studio</option>
+        </select>
+      </div>
+      <h3 id="audienceTitle" style="font-family:var(--display);font-size:20px;margin:24px 0 0;"></h3>
+      <div class="audience-grid">
+        <div>
+          <div class="audience-sub">Who they are</div>
+          <div class="stack-bar" id="compositionBar"></div>
+          <div class="bar-legend">
+            <span><span class="dot" style="background:#5AA9E6"></span>Students</span>
+            <span><span class="dot" style="background:#C8E84D"></span>Professionals</span>
+            <span><span class="dot" style="background:#3A4448"></span>Other</span>
+          </div>
+          <div class="audience-sub">Age bands</div>
+          <div class="stack-bar" id="ageBar"></div>
+          <div class="bar-legend">
+            <span><span class="dot" style="background:#8B7FE8"></span>18–24</span>
+            <span><span class="dot" style="background:#E85AC0"></span>25–34</span>
+            <span><span class="dot" style="background:#3A4448"></span>35+</span>
+          </div>
+        </div>
+        <div>
+          <div class="audience-sub">Buying behavior</div>
+          <div class="meter">
+            <div class="meter-top"><span>Price sensitivity</span><span id="priceSensVal"></span></div>
+            <div class="meter-track"><div class="meter-fill" id="priceSensMeter" style="background:var(--purchase);width:0%"></div></div>
+          </div>
+          <div class="meter">
+            <div class="meter-top"><span>Tech enthusiasm</span><span id="techVal"></span></div>
+            <div class="meter-track"><div class="meter-fill" id="techMeter" style="background:var(--knowledge);width:0%"></div></div>
+          </div>
+          <div class="audience-sub" style="margin-top:24px;">Top interests</div>
+          <div class="chips" id="interestChips"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-tag">"The first AI-powered genome sequencing platform for the creator economy."</div>
+    <div class="foot-note">CreatorDNA — prototype interface. All creator, audience, and brand data shown is illustrative.</div>
+  </div>
+</footer>
+
+<script>
+const GENES = [
+  {key:'trust', label:'Trust', code:'TRU', color:'#4DD9C4', desc:'How much the audience believes a recommendation is genuine.'},
+  {key:'purchase', label:'Purchase', code:'PUR', color:'#F2B544', desc:'Likelihood followers actually buy what gets posted.'},
+  {key:'knowledge', label:'Knowledge', code:'KNO', color:'#8B7FE8', desc:'Educational depth and perceived expertise.'},
+  {key:'entertainment', label:'Entertainment', code:'ENT', color:'#F2616B', desc:'Raw ability to capture and hold attention.'},
+  {key:'trend', label:'Trend', code:'TRD', color:'#C8E84D', desc:'Power to start trends rather than follow them.'},
+  {key:'community', label:'Community', code:'COM', color:'#5AA9E6', desc:'Audience loyalty, repeat engagement, real conversation.'},
+  {key:'persuasion', label:'Persuasion', code:'PER', color:'#E85AC0', desc:'Ability to actually change a follower\'s decision.'}
+];
+
+const CREATORS = [
+  {id:'prism', handle:'@prismloop', niche:'Gaming & Entertainment', followers:1800000,
+    scores:{trust:38,purchase:22,knowledge:15,entertainment:88,trend:64,community:30,persuasion:41},
+    audience:{students:58,professionals:20,other:22,priceSensitive:70,tech:90,age:[60,30,10],interests:['Gaming gear','Esports','Streaming culture']}},
+  {id:'jfield', handle:'@field.julia', niche:'Outdoor & Budget Fitness', followers:38000,
+    scores:{trust:91,purchase:84,knowledge:76,entertainment:52,trend:58,community:89,persuasion:80},
+    audience:{students:40,professionals:25,other:35,priceSensitive:80,tech:72,age:[35,40,25],interests:['Outdoor gear','Budget fitness','Sustainable living']}},
+  {id:'nbench', handle:'@northbenchco', niche:'Home & DIY', followers:410000,
+    scores:{trust:72,purchase:65,knowledge:80,entertainment:40,trend:35,community:70,persuasion:60},
+    audience:{students:15,professionals:55,other:30,priceSensitive:45,tech:58,age:[18,46,36],interests:['Home renovation','DIY tools','Interior design']}},
+  {id:'drnoor', handle:'@drnoor.skin', niche:'Skincare & Dermatology', followers:92000,
+    scores:{trust:95,purchase:78,knowledge:97,entertainment:35,trend:45,community:75,persuasion:70},
+    audience:{students:30,professionals:50,other:20,priceSensitive:35,tech:40,age:[25,48,27],interests:['Skincare science','Dermatology','Clean beauty']}},
+  {id:'rove', handle:'@rove.eats', niche:'Food & Travel', followers:650000,
+    scores:{trust:60,purchase:55,knowledge:40,entertainment:75,trend:70,community:58,persuasion:62},
+    audience:{students:25,professionals:45,other:30,priceSensitive:55,tech:62,age:[30,44,26],interests:['Travel deals','Food culture','City guides']}},
+  {id:'lunaire', handle:'@lunaire.studio', niche:'Fashion & Beauty', followers:1200000,
+    scores:{trust:50,purchase:45,knowledge:30,entertainment:80,trend:85,community:48,persuasion:75},
+    audience:{students:48,professionals:30,other:22,priceSensitive:60,tech:75,age:[55,35,10],interests:['Fashion trends','Beauty hauls','Streetwear']}}
+];
+
+const BRANDS = [
+  {id:'verve', name:'Verve Skincare', category:'Skincare', weights:{trust:.30,knowledge:.30,purchase:.15,persuasion:.15,community:.05,trend:.025,entertainment:.025}},
+  {id:'northfield', name:'Northfield Coffee', category:'Food & Beverage', weights:{community:.30,entertainment:.25,trust:.15,purchase:.15,trend:.10,knowledge:.025,persuasion:.025}},
+  {id:'lumen', name:'Lumen Sportswear', category:'Athletic Apparel', weights:{trend:.30,persuasion:.25,entertainment:.20,purchase:.15,trust:.05,community:.025,knowledge:.025}},
+  {id:'crestline', name:'Crestline Finance App', category:'Fintech', weights:{trust:.35,knowledge:.30,persuasion:.15,purchase:.10,community:.05,trend:.025,entertainment:.025}},
+  {id:'bloomhaus', name:'Bloomhaus Furniture', category:'Home & Living', weights:{purchase:.25,community:.25,trust:.20,knowledge:.15,persuasion:.10,trend:.025,entertainment:.025}}
+];
+
+const DIAGNOSTIC = {
+  TRU: h => `${h}'s audience treats their word as fact. Recommendations here carry the weight of a referral, not an ad.`,
+  PUR: h => `This isn't a watching audience — it's a buying one. ${h} reliably turns attention into carts.`,
+  KNO: h => `${h} is read as the expert in the room. Best matched to categories that reward explanation over hype.`,
+  ENT: h => `${h} wins attention easily, but that attention doesn't always travel to action.`,
+  TRD: h => `${h}'s audience moves early. A strong pick for launches that need a first wave.`,
+  COM: h => `${h}'s following behaves more like a community than a crowd — loyal, talkative, repeat engagers.`,
+  PER: h => `When ${h} changes their mind in public, their audience tends to follow.`
+};
+
+let state = { activeCreator: 'prism' };
+
+function fmtFollowers(n){
+  if(n>=1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'')+'M';
+  if(n>=1000) return Math.round(n/1000)+'K';
+  return String(n);
+}
+
+function influenceIndex(s){
+  return Math.round(s.trust*0.25 + s.purchase*0.25 + s.persuasion*0.2 + s.community*0.15 + s.knowledge*0.1 + s.trend*0.025 + s.entertainment*0.025);
+}
+
+function dominantGene(s){
+  let best = GENES[0];
+  GENES.forEach(g => { if(s[g.key] > s[best.key]) best = g; });
+  return best;
+}
+
+function fitLabel(s){
+  const groups = [
+    {l:'Conversion campaigns', v:(s.trust+s.purchase+s.persuasion)/3},
+    {l:'Awareness campaigns', v:(s.entertainment+s.trend)/2},
+    {l:'Educational campaigns', v:s.knowledge},
+    {l:'Loyalty & retention', v:s.community}
+  ];
+  groups.sort((a,b)=>b.v-a.v);
+  return groups[0].l;
+}
+
+function diagnosticText(c){
+  const dom = dominantGene(c.scores);
+  return DIAGNOSTIC[dom.code](c.handle);
+}
+
+function prefersReducedMotion(){
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function traceSVG(scores, opts={}){
+  const w = opts.width || 640, h = opts.height || 170;
+  const compact = !!opts.compact;
+  const showValue = opts.showValue !== undefined ? opts.showValue : !compact;
+  const showCode = !compact;
+  const padTop = showValue ? 26 : 10;
+  const padBottom = showCode ? 28 : 10;
+  const baseline = h - padBottom, top = padTop;
+  const n = GENES.length, gap = 12;
+  const barW = (w - gap*(n+1)) / n;
+  const uid = 'tr' + Math.random().toString(36).slice(2,9);
+  let grid = '', bars = '';
+  [25,50,75,100].forEach(v=>{
+    const y = baseline - (v/100)*(baseline-top);
+    grid += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="2 5"/>`;
+  });
+  GENES.forEach((g,i)=>{
+    const score = Math.max(0, Math.min(100, scores[g.key] || 0));
+    const x = gap + i*(barW+gap);
+    const barH = (score/100) * (baseline-top);
+    const y = baseline - barH;
+    bars += `<rect x="${x}" y="${y-8}" width="${barW}" height="${barH+8}" rx="${barW/2}" fill="${g.color}" opacity="0.16" filter="url(#blur-${uid})"/>`;
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${Math.max(barH,2)}" rx="${barW/2}" fill="${g.color}"/>`;
+    if(showValue) bars += `<text x="${x+barW/2}" y="${y-12}" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="600" fill="${g.color}">${score}</text>`;
+    if(showCode) bars += `<text x="${x+barW/2}" y="${h-10}" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="10.5" letter-spacing="0.5" fill="rgba(234,241,239,0.5)">${g.code}</text>`;
+  });
+  return `<div style="width:100%;height:${h}px;">
+    <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Influence genome trace">
+      <defs><filter id="blur-${uid}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+      <line x1="0" y1="${baseline}" x2="${w}" y2="${baseline}" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      ${grid}
+      ${bars}
+    </svg>
+  </div>`;
+}
+
+function renderLegend(){
+  document.getElementById('legendStrip').innerHTML = GENES.map(g => `
+    <div class="legend-item">
+      <div class="swatch" style="background:${g.color}"></div>
+      <div class="gname">${g.label}</div>
+      <div class="gdesc">${g.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderHero(){
+  const a = CREATORS.find(c=>c.id==='prism'), b = CREATORS.find(c=>c.id==='jfield');
+  document.getElementById('heroA').innerHTML = `
+    <div class="sample-label">Sample A — ${a.handle}</div>
+    <div class="sample-followers">${fmtFollowers(a.followers)} followers</div>
+    <div class="sample-trust" style="color:var(--trust)">Trust ${a.scores.trust}</div>`;
+  document.getElementById('heroB').innerHTML = `
+    <div class="sample-label">Sample B — ${b.handle}</div>
+    <div class="sample-followers">${fmtFollowers(b.followers)} followers</div>
+    <div class="sample-trust" style="color:var(--trust)">Trust ${b.scores.trust}</div>`;
+  const trustDiff = b.scores.trust - a.scores.trust;
+  const fewer = Math.round((1 - b.followers/a.followers)*100);
+  document.getElementById('heroVerdict').innerHTML =
+    `AI recommends <strong>Sample B</strong> for purchase-driven campaigns — ${trustDiff} points higher trust with ${fewer}% fewer followers.`;
+}
+
+function cardHTML(c){
+  const idx = influenceIndex(c.scores);
+  const dom = dominantGene(c.scores);
+  const active = c.id === state.activeCreator ? 'active' : '';
+  return `<button class="card ${active}" style="--card-accent:${dom.color}" onclick="selectCreator('${c.id}')" aria-pressed="${c.id===state.activeCreator}">
+    <span class="card-tag" style="background:${dom.color}"></span>
+    <div class="card-top"><span class="handle">${c.handle}</span><span class="niche">${c.niche}</span></div>
+    ${traceSVG(c.scores,{height:64,compact:true})}
+    <div class="card-stats">
+      <div><span class="stat-label">Followers</span><span class="stat-val dim">${fmtFollowers(c.followers)}</span></div>
+      <div class="right"><span class="stat-label">Influence Index</span><span class="stat-val" style="color:${dom.color}">${idx}</span></div>
+    </div>
+  </button>`;
+}
+
+function renderRoster(){
+  document.getElementById('rosterGrid').innerHTML = CREATORS.map(cardHTML).join('');
+}
+
+function renderDetail(c){
+  const idx = influenceIndex(c.scores);
+  const dom = dominantGene(c.scores);
+  const fit = fitLabel(c.scores);
+  document.getElementById('detailPanel').innerHTML = `
+    <div class="detail-head">
+      <div>
+        <div class="eyebrow"><span class="tick" style="background:${dom.color}"></span>Sequenced profile</div>
+        <h3 style="font-family:var(--display);font-size:24px;margin:0 0 4px;">${c.handle}</h3>
+        <div style="color:var(--text-secondary);font-size:13px;">${c.niche} · ${fmtFollowers(c.followers)} followers</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;">Influence Index</div>
+        <div style="font-family:var(--display);font-size:40px;font-weight:700;color:${dom.color};">${idx}</div>
+      </div>
+    </div>
+    ${traceSVG(c.scores,{height:170})}
+    <div class="detail-note">${diagnosticText(c)}</div>
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+      <span class="tag-chip">Dominant gene · ${dom.label}</span>
+      <span class="tag-chip">Best for · ${fit}</span>
+    </div>
+  `;
+}
+
+function selectCreator(id){
+  state.activeCreator = id;
+  renderRoster();
+  renderDetail(CREATORS.find(c=>c.id===id));
+}
+
+function updateCompare(){
+  const a = CREATORS.find(c=>c.id===document.getElementById('compareA').value);
+  const b = CREATORS.find(c=>c.id===document.getElementById('compareB').value);
+  document.getElementById('compareTraceA').innerHTML = traceSVG(a.scores,{height:160});
+  document.getElementById('compareTraceB').innerHTML = traceSVG(b.scores,{height:160});
+  document.getElementById('compareMetaA').textContent = `${fmtFollowers(a.followers)} followers · Influence Index ${influenceIndex(a.scores)}`;
+  document.getElementById('compareMetaB').textContent = `${fmtFollowers(b.followers)} followers · Influence Index ${influenceIndex(b.scores)}`;
+  document.getElementById('deltaCol').innerHTML = GENES.map(g=>{
+    const diff = a.scores[g.key] - b.scores[g.key];
+    const cls = diff>0 ? 'd-pos' : diff<0 ? 'd-neg' : '';
+    const sign = diff>0 ? '+' : '';
+    return `<div class="delta-row"><span>${g.code}</span><span class="${cls}">${sign}${diff}</span></div>`;
+  }).join('');
+  const idxA = influenceIndex(a.scores), idxB = influenceIndex(b.scores);
+  const verdictEl = document.getElementById('compareVerdict');
+  if(idxA === idxB){
+    verdictEl.innerHTML = `${a.handle} and ${b.handle} carry an identical Influence Index — differentiate by campaign fit instead.`;
+  } else {
+    const winner = idxA > idxB ? a : b, loser = idxA > idxB ? b : a;
+    const diff = Math.abs(idxA - idxB);
+    verdictEl.innerHTML = `<strong>${winner.handle}</strong> (${fmtFollowers(winner.followers)} followers) scores ${diff} points higher on Influence Index than ${loser.handle} (${fmtFollowers(loser.followers)} followers). Recommended for ${fitLabel(winner.scores)}.`;
+  }
+}
+
+function runSimulation(){
+  const c = CREATORS.find(x=>x.id===document.getElementById('simCreator').value);
+  const brand = BRANDS.find(x=>x.id===document.getElementById('simBrand').value);
+  const resultsEl = document.getElementById('simResults');
+  const scanEl = document.getElementById('simScan');
+  const btn = document.getElementById('simRunBtn');
+  scanEl.style.display = 'block';
+  resultsEl.style.opacity = '0';
+  btn.disabled = true; btn.textContent = 'Sequencing…';
+  setTimeout(()=>{
+    const brandFit = Math.round(GENES.reduce((sum,g)=> sum + c.scores[g.key]*(brand.weights[g.key]||0), 0));
+    const conversion = Math.round((c.scores.purchase*0.4 + c.scores.persuasion*0.3 + c.scores.trust*0.3) * (brandFit/100));
+    const engagement = (((c.scores.entertainment*0.6 + c.scores.community*0.4)/100) * 15).toFixed(1);
+    const trustRaw = Math.round((c.scores.trust-50)/5);
+    const trustImpact = (trustRaw>=0?'+':'') + trustRaw;
+    let verdict;
+    if(brandFit>=75) verdict = `Strong match. ${c.handle}'s genome aligns closely with ${brand.name} — expect authentic-feeling content and above-average conversion.`;
+    else if(brandFit>=50) verdict = `Workable match. Lean into ${dominantGene(c.scores).label.toLowerCase()} in the creative brief to close the gap.`;
+    else verdict = `Weak match. ${c.handle}'s strengths don't line up with what ${brand.name} needs — consider a different profile.`;
+    resultsEl.innerHTML = `
+      <div class="metric-tile"><div class="m-label">Engagement rate</div><div class="m-val">${engagement}%</div><div class="m-desc">Predicted interaction rate on sponsored content.</div></div>
+      <div class="metric-tile"><div class="m-label">Trust impact</div><div class="m-val" style="color:${trustRaw>=0?'#4DD9C4':'#F2616B'}">${trustImpact}</div><div class="m-desc">Shift in audience trust toward ${brand.name}.</div></div>
+      <div class="metric-tile"><div class="m-label">Conversion probability</div><div class="m-val">${conversion}%</div><div class="m-desc">Likelihood the audience takes a purchase action.</div></div>
+      <div class="metric-tile"><div class="m-label">Brand fit score</div><div class="m-val">${brandFit}</div><div class="m-desc">Genome alignment with ${brand.name}'s ${brand.category} category.</div></div>
+    `;
+    document.querySelector('.metrics-grid').insertAdjacentHTML('beforeend', `<div class="sim-verdict" style="grid-column:1/-1;">${verdict}</div>`);
+    resultsEl.style.opacity = '1';
+    scanEl.style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Run simulation';
+  }, prefersReducedMotion() ? 0 : 900);
+}
+
+function updateAudience(){
+  const c = CREATORS.find(x=>x.id===document.getElementById('audienceSelect').value);
+  const aud = c.audience;
+  document.getElementById('audienceTitle').textContent = `${c.handle} — Audience DNA`;
+  document.getElementById('compositionBar').innerHTML = `
+    <div class="stack-seg" style="width:${aud.students}%;background:#5AA9E6;">${aud.students}%</div>
+    <div class="stack-seg" style="width:${aud.professionals}%;background:#C8E84D;">${aud.professionals}%</div>
+    <div class="stack-seg" style="width:${aud.other}%;background:#3A4448;color:#EAF1EF;">${aud.other}%</div>
+  `;
+  document.getElementById('ageBar').innerHTML = `
+    <div class="stack-seg" style="width:${aud.age[0]}%;background:#8B7FE8;">${aud.age[0]}%</div>
+    <div class="stack-seg" style="width:${aud.age[1]}%;background:#E85AC0;">${aud.age[1]}%</div>
+    <div class="stack-seg" style="width:${aud.age[2]}%;background:#3A4448;color:#EAF1EF;">${aud.age[2]}%</div>
+  `;
+  document.getElementById('priceSensMeter').style.width = aud.priceSensitive + '%';
+  document.getElementById('priceSensVal').textContent = aud.priceSensitive + '%';
+  document.getElementById('techMeter').style.width = aud.tech + '%';
+  document.getElementById('techVal').textContent = aud.tech + '%';
+  document.getElementById('interestChips').innerHTML = aud.interests.map(i=>`<span class="tag-chip">${i}</span>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderLegend();
+  renderHero();
+  renderRoster();
+  renderDetail(CREATORS.find(c=>c.id===state.activeCreator));
+  updateCompare();
+  updateAudience();
+});
+</script>
+</body>
+</html>
