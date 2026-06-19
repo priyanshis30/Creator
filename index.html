@@ -1,4 +1,28 @@
-import { useState, useEffect, useRef } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CreatorDNA — Influence Genome Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- React + ReactDOM (production builds) -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<!-- Babel standalone, so the JSX below can run directly in the browser -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+
+<style>
+  html, body { margin: 0; padding: 0; background: #0A0E10; }
+  #root { min-height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
 
 const C = {
   bg: "#0A0E10", panel: "#12181B", raised: "#161D21", line: "#232B2F",
@@ -51,7 +75,6 @@ function influenceIndex(s) { return Math.round(s.trust * 0.25 + s.purchase * 0.2
 function dominantGene(s) { return GENES.reduce((b, g) => s[g.key] > s[b.key] ? g : b); }
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
   body,#root{background:${C.bg};color:${C.primary};font-family:'Inter',sans-serif;min-height:100vh;}
   ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:${C.panel};} ::-webkit-scrollbar-thumb{background:${C.line};border-radius:3px;}
@@ -118,7 +141,6 @@ function LogoBars({ size = 20 }) {
   );
 }
 
-// ── SECTION: Hero ────────────────────────────────────────────────────────────
 function Hero({ onNav }) {
   const a = CREATORS[0], b = CREATORS[1];
   return (
@@ -162,7 +184,6 @@ function Hero({ onNav }) {
   );
 }
 
-// ── SECTION: Genome Map ───────────────────────────────────────────────────────
 function GenomeMapSection() {
   return (
     <section style={{ padding: "80px 0", borderBottom: `1px solid ${C.line}` }}>
@@ -184,7 +205,6 @@ function GenomeMapSection() {
   );
 }
 
-// ── SECTION: Sequencer ────────────────────────────────────────────────────────
 function SequencerSection({ active, setActive }) {
   const creator = CREATORS.find(c => c.id === active);
   const dom = dominantGene(creator.scores);
@@ -256,7 +276,6 @@ function SequencerSection({ active, setActive }) {
   );
 }
 
-// ── SECTION: Compare ──────────────────────────────────────────────────────────
 function CompareSection() {
   const [a, setA] = useState("prism");
   const [b, setB] = useState("jfield");
@@ -307,7 +326,6 @@ function CompareSection() {
   );
 }
 
-// ── SECTION: Simulator ────────────────────────────────────────────────────────
 function SimulatorSection() {
   const [creatorId, setCreatorId] = useState("jfield");
   const [brandId, setBrandId] = useState("verve");
@@ -390,7 +408,6 @@ function SimulatorSection() {
   );
 }
 
-// ── SECTION: Audience DNA ─────────────────────────────────────────────────────
 function AudienceSection() {
   const [id, setId] = useState("jfield");
   const c = CREATORS.find(x => x.id === id);
@@ -460,9 +477,8 @@ function AudienceSection() {
   );
 }
 
-export default function App() {
+function App() {
   const [activeCreator, setActiveCreator] = useState("prism");
-  const sectionRefs = { sequencer: useRef(), compare: useRef(), simulator: useRef(), audience: useRef() };
 
   function navTo(id) {
     const el = document.getElementById(id);
@@ -498,3 +514,9 @@ export default function App() {
     </>
   );
 }
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+</body>
+</html>
